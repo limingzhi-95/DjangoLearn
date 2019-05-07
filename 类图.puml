@@ -1,0 +1,43 @@
+@startuml
+
+class BaseForm() {
+    Bool is_bound  #字段是否有值
+    Json data   #字段值
+    json files  #字段值
+    Char auto_id  #字段id
+    Char prefix
+    Json initial  #初始值
+    JsonList error_class  #保存错误的列表
+    Char label_suffix
+    Bool empty_permitted  #字段是否允许为空
+    json _errors  #保存数据清理之后的错误值
+    Json fields
+    Json _bound_fields_cache
+    Json use_required_attribute
+    Json renderer
+    Json errors  #返回检查出来的错误
+
+    order_fields(field_order) #给字段排序
+    is_valid()  #通过判断is_bound和errors验证字段是否合法
+    add_prefix(field_name)  #给字段名加上前缀
+    add_initial_prefix(field_name)  #给字段名加上初始前缀
+    _html_output() #输出HTML格式
+    as_table() #以table格式输出为html
+    as_ul() #以<ul>格式输出为html
+    as_p()  #以<p>格式输出为html
+    non_field_errors()
+    add_error()  #将查出的错误加到self._error中
+    full_clean()  #数据清洗
+    _clean_fields()  #数据清理中的字段数据清理
+    _clean_form()   #作用?
+    _post_clean() #pass
+    clean()  #返回self.cleaned_data
+    has_changed()  #数据和初始值比较是否有变化
+    changed_data()  #相较于初始值已经改变了的数据
+    media()
+    hidden_fields()
+    visible_fields()
+    get_initial_for_field()
+}
+
+@enduml

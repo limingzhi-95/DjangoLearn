@@ -1,0 +1,62 @@
+@startuml
+
+start
+    if (is_bound() 是否有数据传入) then (是)
+        : full_clean();
+        if (字段允许为空,并且全部为初始值) then (否)
+        repeat
+            : 清洗数据;
+            if (字段不允许输入) then (是)
+                : 赋初始值;
+            else (否)
+                : 赋传入的值;
+            endif
+            if (字段是文件) then (是)
+                : 使用文件的清洗方法;
+                : 如果输入的不是文件, 抛出异常;
+                : 使用Field类的clean方法;
+                if (数据是空并且字段不允许为空) then (是)
+                    : 抛出异常;
+                else (否)
+                    if (数据为空) then (是)
+                        : 结束清洗;
+                    else (否)
+                        : 使用手动添加的验证方法来验证, 记录异常;
+                        : 如果有异常则全部抛出;
+                    endif
+                endif
+            else (否)
+                : 使用普通的清洗方法;
+                if (数据是空并且字段不允许为空) then (是)
+                    : 抛出异常;
+                else (否)
+                    if (数据为空) then (是)
+                        : 结束清洗;
+                    else (否)
+                        : 使用手动添加的验证方法来验证, 记录异常;
+                        : 如果有异常则全部抛出;
+                    endif
+                endif
+            endif
+            : 将值赋到cleaned_data中;
+        repeat while (字段未处理完)
+        : 将_clean_fields中赋值的self.cleaned_data重新赋值给cleaned_data;
+
+        if (出现异常) (是):
+            : 将error转为ValidationError;
+
+        else (否)
+            if (cleaned_data 不为空) (是)
+                : 将cleaned_data赋值给self.cleaned_data;
+            endif
+        else (是)
+            : 验证不通过;
+        endif
+    else (是)
+        : 验证不通过;
+    endif
+
+end
+
+
+@enduml
